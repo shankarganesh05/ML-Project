@@ -1,6 +1,7 @@
 from typing import List,Dict
 from websocket import create_connection
 import json
+from loguru import logger
 
 class krakenWebSocketTradeApi:
     url ='wss://ws.kraken.com/v2'
@@ -11,7 +12,7 @@ class krakenWebSocketTradeApi:
 
         ## Creating Connection using WebSocket
         self._ws=create_connection(self.url)
-        print("Connection Established")
+        logger.info("Connection Established")
         ## Calling Subscribe function for the product_id
         self._subscribe(product_id)
     
@@ -29,7 +30,7 @@ class krakenWebSocketTradeApi:
             }
         }
         self._ws.send(json.dumps(msg)) # converting json to string
-        print("Subcribtion Sent")
+        logger.info("Subcribtion Sent")
         """ Discarding initial 2 message due to Subcription Message"""
         _= self._ws.recv()
         _= self._ws.recv()

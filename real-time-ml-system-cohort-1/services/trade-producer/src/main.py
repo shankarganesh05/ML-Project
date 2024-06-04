@@ -3,6 +3,7 @@ from typing import List,Dict
 from quixstreams import Application
 from time import sleep
 from src.kraken_api import krakenWebSocketTradeApi
+from loguru import logger
 
 def produce_trades(kafka_broker_address:str,kafka_topic_name:str)-> None:
 
@@ -28,7 +29,7 @@ def produce_trades(kafka_broker_address:str,kafka_topic_name:str)-> None:
                 producer.produce(
                 topic=topic.name, value=message.value, key=message.key
                 )
-                print('Message Sent')
+                logger.info(trade)
         sleep(1)
 if __name__ == '__main__':
     produce_trades(kafka_broker_address='redpanda-0:9092',kafka_topic_name='trade')
