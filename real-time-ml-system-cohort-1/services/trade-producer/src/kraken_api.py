@@ -9,11 +9,14 @@ class krakenWebSocketTradeApi:
 
         self.product_id = product_id
 
+        ## Creating Connection using WebSocket
         self._ws=create_connection(self.url)
         print("Connection Established")
+        ## Calling Subscribe function for the product_id
         self._subscribe(product_id)
     
     
+    ### Subscription Function to Subscribe to Trade Channel for Product_id
     def _subscribe(self,product_id):
         msg = { 
             "method": "subscribe",
@@ -25,9 +28,9 @@ class krakenWebSocketTradeApi:
                 "snapshot": False
             }
         }
-        self._ws.send(json.dumps(msg))
+        self._ws.send(json.dumps(msg)) # converting json to string
         print("Subcribtion Sent")
-        """ Discarding initial 2 message due to Subcription"""
+        """ Discarding initial 2 message due to Subcription Message"""
         _= self._ws.recv()
         _= self._ws.recv()
 
@@ -50,11 +53,13 @@ class krakenWebSocketTradeApi:
         # }
         # ]
         message = self._ws.recv()
+        ## Checking for HearBeat Message and returning Empty List
         if 'heartbeat' in message:
             return []
         
-        message = json.loads(message)
+        message = json.loads(message) # converting string to json
         trades = []
+        # Iterating over Data in the message and fetching price,qty & timestamp
         for trade in message['data']:
             trades.append({
                 'product_id': self.product_id,
