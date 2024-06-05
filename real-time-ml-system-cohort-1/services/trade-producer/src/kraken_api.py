@@ -8,7 +8,7 @@ from websocket import create_connection
 class krakenWebSocketTradeApi:
     url = 'wss://ws.kraken.com/v2'
 
-    def __init__(self, product_id: str):
+    def __init__(self, product_id: List):
         self.product_id = product_id
 
         ## Creating Connection using WebSocket
@@ -21,13 +21,15 @@ class krakenWebSocketTradeApi:
     def _subscribe(self, product_id):
         msg = {
             'method': 'subscribe',
-            'params': {'channel': 'trade', 'symbol': [product_id], 'snapshot': False},
+            'params': {'channel': 'trade', 'symbol': product_id, 'snapshot': False},
         }
         self._ws.send(json.dumps(msg))  # converting json to string
         logger.info('Subcribtion Sent')
         """ Discarding initial 2 message due to Subcription Message"""
         _ = self._ws.recv()
-        _ = self._ws.recv()
+        for _ in product_id:
+            _ = self._ws.recv()
+        
 
     def get_trades(self) -> List[Dict]:
         # mock_trades=[
@@ -55,7 +57,7 @@ class krakenWebSocketTradeApi:
         for trade in message['data']:
             trades.append(
                 {
-                    'product_id': self.product_id,
+                    'product_id': trade['symbol'],
                     'price': trade['price'],
                     'volume': trade['qty'],
                     'timestamp': trade['timestamp'],
