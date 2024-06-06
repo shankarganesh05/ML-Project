@@ -8,7 +8,7 @@ from websocket import create_connection
 class krakenWebSocketTradeApi:
     url = 'wss://ws.kraken.com/v2'
 
-    def __init__(self, product_id: List):
+    def __init__(self, product_id: List[str]):
         self.product_id = product_id
 
         ## Creating Connection using WebSocket
@@ -27,7 +27,9 @@ class krakenWebSocketTradeApi:
         logger.info('Subcribtion Sent')
         """ Discarding initial 2 message due to Subcription Message"""
         _ = self._ws.recv()
+        
         for _ in product_id:
+            _ = self._ws.recv()
             _ = self._ws.recv()
         
 
