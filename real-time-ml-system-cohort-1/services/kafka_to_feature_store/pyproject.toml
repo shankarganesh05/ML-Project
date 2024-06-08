@@ -6,10 +6,27 @@ authors = ["shankarganesh05 <shankarganesh.d@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8,<3.13"
+python = ">=3.8,<3.13"
 hopsworks = "^3.7.0"
+loguru = "^0.7.2"
+python-dotenv = "^1.0.1"
+quixstreams = "^2.5.1"
 
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.8"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = ["I"]

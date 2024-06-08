@@ -1,0 +1,21 @@
+FROM python:3.10.3-slim-buster
+
+RUN pip install poetry==1.8.3
+
+WORKDIR /app
+
+ENV PYTHONPATH "${PYTHONPATH}:/app/src"
+
+COPY pyproject.toml poetry.lock /app/
+
+#COPY . /app
+
+RUN pip wheel --no-cache-dir --use-pep517 "twofish (==0.3.0)"
+
+RUN poetry install
+
+COPY .  /app
+
+# RUN poetry install
+
+CMD ["poetry","run","python","src/main.py"]
