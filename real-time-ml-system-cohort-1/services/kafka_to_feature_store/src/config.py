@@ -10,3 +10,4 @@ feature_group_name = os.environ["FEATURE_GROUP_NAME"]
 feature_group_version = int(os.environ["FEATURE_GROUP_VERSION"])
 hopsworks_project_name = os.environ["HOPSWORKS_PRODUCT_NAME"]
 hopsworks_api_key = os.environ["HOPSWORKS_API_KEY"]
+buffer_size :int = 1000

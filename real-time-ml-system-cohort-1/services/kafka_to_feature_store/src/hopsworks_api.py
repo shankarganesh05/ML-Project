@@ -1,3 +1,4 @@
+from typing import List,Dict
 import hopsworks
 import pandas as pd
 from typing import Dict
@@ -5,7 +6,7 @@ from src import config
 
 
 def push_to_featurestore(
-    feature_group_name: str, feature_group_version: int, Data: Dict
+    feature_group_name: str, feature_group_version: int, Data: List[Dict]
 ) -> None:
     project = hopsworks.login(
         project=config.hopsworks_project_name, api_key_value=config.hopsworks_api_key
@@ -21,7 +22,7 @@ def push_to_featurestore(
         event_time="timestamp",
     )
 
-    data = pd.DataFrame([Data])
+    data = pd.DataFrame(Data)
     # breakpoint()
     ohlc_feature_group.insert(
         data, write_options={"start_offline_materialization": False}
