@@ -11,8 +11,10 @@ quixstreams = "^2.5.1"
 python-dotenv = "^1.0.1"
 loguru = "^0.7.2"
 make = "^0.1.6.post2"
-ruff = "^0.4.8"
 
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.7"
 
 [build-system]
 requires = ["poetry-core"]

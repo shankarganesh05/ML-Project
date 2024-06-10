@@ -1,5 +1,7 @@
 FROM python:3.10.3-slim-buster
 
+RUN apt-get update && apt-get install -y gcc python3-dev
+
 RUN pip install poetry==1.8.3
 
 WORKDIR /app
@@ -10,7 +12,7 @@ COPY pyproject.toml poetry.lock /app/
 
 #COPY . /app
 
-RUN pip wheel --no-cache-dir --use-pep517 "twofish (==0.3.0)"
+#RUN pip wheel --no-cache-dir --use-pep517 "twofish (==0.3.0)"
 
 RUN poetry install
 
