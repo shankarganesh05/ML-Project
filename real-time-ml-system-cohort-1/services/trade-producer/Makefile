@@ -8,3 +8,6 @@ lint:
 	ruff check --fix
 format:
 	ruff format .
+
+localrun:
+	poetry run python src/main.py

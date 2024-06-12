@@ -25,9 +25,14 @@ def produce_trades(kafka_broker_address: str, kafka_topic_name: str,live_or_hist
         kraken_api = KrakenRestAPI(product_id=config.product_id,from_ms=from_ms,to_ms=to_ms)
 
     logger.info('Creating the producer...')
-    while True:
+    with app.get_producer() as producer:
+        while True:
         # Create a Producer instance
-        with app.get_producer() as producer:
+            
+            if kraken_api.is_done  == True:
+                logger.info("Fetching Done")
+                break
+            
             trades: List[Dict] = kraken_api.get_trades()
             for trade in trades:
                 # Serialize an event using the defined Topic

@@ -16,6 +16,7 @@ class KrakenRestAPI:
         self.product_id = product_id
         self.from_ms = from_ms
         self.to_ms = to_ms
+        self._is_done = False
     
     def get_trades(self)-> List[Dict]:
 
@@ -43,6 +44,7 @@ class KrakenRestAPI:
         last_ts_in_ns = int(data['result']['last'])
         # convert nanoseconds to milliseconds
         last_ts = last_ts_in_ns // 1_000_000
+        
         if last_ts >= self.to_ms:
             # yes, we are done
             self._is_done = True
@@ -53,7 +55,7 @@ class KrakenRestAPI:
 
         return trades
     def is_done(self) -> bool:
-        """The websocket never stops, so we never stop fetching trades."""
+        
         return self._is_done
 
     
