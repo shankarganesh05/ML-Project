@@ -11,7 +11,16 @@ def trade_to_ohlc(
 ) -> None:
     """"Reads trades from Kafka input topic
     Aggregates them into OHLC Candles using specified window and s
-    saves ohlc data into another kafka topic"""
+    saves ohlc data into another kafka topic
+    
+    Args:
+        kafka_input_topic (str): _description_
+        kafka_output_topic (str): _description_
+        kafka_broker_address (str): _description_
+        ohlc_window_seconds (int): _description_
+    Returns:
+        None
+    """
     app = Application(broker_address=kafka_broker_address,consumer_group="trade_to_ohlc",auto_offset_reset="earliest")
     input_topic = app.topic(name=kafka_input_topic,value_serializer='json')
     output_topic = app.topic(name=kafka_output_topic,value_serializer='json')
@@ -20,6 +29,10 @@ def trade_to_ohlc(
     def init_ohlc_candle(value:Dict) -> Dict:
         """
         Initialize the OHLC candle with the first trade
+        Args:
+            value: dict: The first trade
+        Returns:
+            dict: The initialized OHLC candle
         """
 
         return {
@@ -51,7 +64,7 @@ def trade_to_ohlc(
     # apply tranformations to the incoming data - start
     # Here we need to define how we transform the incoming trades into OHLC candles
     sdf = sdf.tumbling_window(duration_ms=timedelta(seconds=ohlc_window_seconds))
-    sdf = sdf.reduce(reducer=update_ohlc_candle, initializer=init_ohlc_candle).current()
+    sdf = sdf.reduce(reducer=update_ohlc_candle, initializer=init_ohlc_candle).final()
 
     # Unpacking the DataFrames
     sdf['open'] = sdf['value']['open']

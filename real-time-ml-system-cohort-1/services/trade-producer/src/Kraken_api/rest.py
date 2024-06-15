@@ -24,6 +24,7 @@ class KrakenRestAPIMultipleProducts:
                 continue
             else:
                 trades += kraken_api.get_trades()
+
         return trades
     
     def is_done(self) -> bool:
@@ -53,11 +54,12 @@ class KrakenRestAPI:
         self.from_ms,self.to_ms = self._init_from_to_ms(last_n_days)
         self._is_done = False
         self.last_trade_ms = self.from_ms
+        logger.debug(
+            f'Initializing KrakenRestAPI: from_ms={self.from_ms}, to_ms={self.to_ms}'
+        )
         
     def _init_from_to_ms(self,last_n_days: int) -> Tuple[int, int]:
-        today_date = datetime.now(timezone.utc).replace(
-            hour=0, minute=0, second=0, microsecond=0
-        )
+        today_date = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
         to_ms = int(today_date.timestamp() * 1000)
         from_ms = to_ms - last_n_days * 24 * 60 * 60 * 1000
         return from_ms, to_ms

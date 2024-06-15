@@ -6,8 +6,19 @@ from src import config
 
 
 def push_to_featurestore(
-    feature_group_name: str, feature_group_version: int, Data: List[Dict]
+    feature_group_name: str, feature_group_version: int, Data: List[Dict],online_or_offline: str,
 ) -> None:
+    """
+    Pushes the given `data` to the feature store, writing it to the feature group
+    with name `feature_group_name` and version `feature_group_version`.
+
+    Args:
+        feature_group_name (str): The name of the feature group to write to.
+        feature_group_version (int): The version of the feature group to write to.
+        data (List[Dict]): A list of dictionaries containing the data to write.
+    Returns:
+        None
+    """
     project = hopsworks.login(
         project=config.hopsworks_project_name, api_key_value=config.hopsworks_api_key
     )
@@ -25,5 +36,5 @@ def push_to_featurestore(
     data = pd.DataFrame(Data)
     # breakpoint()
     ohlc_feature_group.insert(
-        data, write_options={"start_offline_materialization": False}
+        data, write_options={"start_offline_materialization": True if online_or_offline == "offline" else False}
     )

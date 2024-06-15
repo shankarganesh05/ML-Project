@@ -29,8 +29,8 @@ def produce_trades(kafka_broker_address: str, kafka_topic_name: str,product_id:L
         while True:
         # Create a Producer instance
             
-            if kraken_api.is_done  == True:
-                logger.info("Fetching Done")
+            if kraken_api.is_done():
+                logger.info("Done!Fetching Historical Data")
                 break
             
             trades: List[Dict] = kraken_api.get_trades()

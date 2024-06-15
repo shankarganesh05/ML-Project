@@ -11,3 +11,4 @@ feature_group_version = int(os.environ["FEATURE_GROUP_VERSION"])
 hopsworks_project_name = os.environ["HOPSWORKS_PRODUCT_NAME"]
 hopsworks_api_key = os.environ["HOPSWORKS_API_KEY"]
 buffer_size :int = 1000
+live_or_historical = os.environ["LIVE_OR_HISTORICAL"]
