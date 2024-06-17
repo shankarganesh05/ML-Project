@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 build:
 	docker build -t trade-producer .
 
@@ -10,4 +11,7 @@ format:
 	ruff format .
 
 localrun:
-	poetry run python src/main.py
+	source live.env && poetry run python src/main.py
+
+localrun_historical:
+	source historical.env && poetry run python src/main.py

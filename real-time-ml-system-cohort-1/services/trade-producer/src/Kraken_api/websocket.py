@@ -3,7 +3,8 @@ from typing import Dict, List
 
 from loguru import logger
 from websocket import create_connection
-
+from src.Kraken_api.trade import Trade
+from datetime import datetime,timezone
 
 class krakenWebSocketTradeApi:
     url = 'wss://ws.kraken.com/v2'
@@ -57,16 +58,20 @@ class krakenWebSocketTradeApi:
         trades = []
         # Iterating over Data in the message and fetching price,qty & timestamp
         for trade in message['data']:
+            timestamp_ms = self.to_ms(trade['timestamp'])
             trades.append(
-                {
-                    'product_id': trade['symbol'],
-                    'price': trade['price'],
-                    'volume': trade['qty'],
-                    'timestamp': trade['timestamp'],
-                }
+                Trade(
+                    product_id = trade['symbol'],
+                    price=trade['price'],
+                    volume=trade['qty'],
+                    timestamp_ms=timestamp_ms,
+                )
             )
         return trades
     
     def is_done(self) -> bool:
         """The websocket never stops, so we never stop fetching trades."""
         return False
+    def to_ms(self,timestamp:str)->int:
+        timestamp = datetime.fromisoformat(timestamp[:-1]).replace(tzinfo=timezone.utc)
+        return int(timestamp.timestamp()*1000)

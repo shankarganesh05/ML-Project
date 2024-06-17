@@ -6,10 +6,10 @@ from typing import Dict, List
 from loguru import logger
 from quixstreams import Application
 
-from src import config
+from src.config import config
 from src.Kraken_api.rest import KrakenRestAPIMultipleProducts
 from src.Kraken_api.websocket import krakenWebSocketTradeApi
-
+from src.Kraken_api.trade import Trade
 
 def produce_trades(kafka_broker_address: str, kafka_topic_name: str,product_id:List[str],live_or_historical:str,last_n_days:int) -> None:
     app = Application(broker_address=kafka_broker_address)
@@ -33,19 +33,20 @@ def produce_trades(kafka_broker_address: str, kafka_topic_name: str,product_id:L
                 logger.info("Done!Fetching Historical Data")
                 break
             
-            trades: List[Dict] = kraken_api.get_trades()
+            trades: List[Trade] = kraken_api.get_trades()
             for trade in trades:
                 # Serialize an event using the defined Topic
-                message = topic.serialize(key=trade['product_id'], value=trade,timestamp_ms=trade['time'] * 1000)
+                message = topic.serialize(key=trade.product_id, value=trade.model_dump())
 
                 # Produce a message into the Kafka topic
-                producer.produce(topic=topic.name, value=message.value, key=message.key,timestamp=message.timestamp)
+                producer.produce(topic=topic.name, value=message.value, key=message.key)
                 logger.info(trade)
         #sleep(1)
 
 
 if __name__ == '__main__':
 
+    logger.debug(config.model_dump())
     try:
         produce_trades(
             kafka_broker_address=config.kafka_broker_address,

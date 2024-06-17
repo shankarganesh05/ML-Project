@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from time import sleep
 import requests
 from loguru import logger
-
+from src.Kraken_api.trade import Trade
 class KrakenRestAPIMultipleProducts:
     def __init__(
         self,
@@ -65,7 +65,7 @@ class KrakenRestAPI:
         return from_ms, to_ms
 
 
-    def get_trades(self)-> List[Dict]:
+    def get_trades(self)-> List[Trade]:
 
 
         payload = {}
@@ -80,15 +80,16 @@ class KrakenRestAPI:
 
         trades= []
         for trade in data['result'][self.product_id]:
-            trades.append({
-                'price': float(trade[0]),
-                'volume': float(trade[1]),
-                'time' : int(trade[2]),
-                'product_id': self.product_id
-                
-            })
+            trades.append(
+                Trade(
+                price=float(trade[0]),
+                volume=float(trade[1]),
+                timestamp_ms= int(trade[2])*1000,
+                product_id=self.product_id,
+                )     
+            )
         # filter out trades that are after the end timestamp
-        trades = [trade for trade in trades if trade['time'] <= self.to_ms // 1000]
+        trades = [trade for trade in trades if trade.timestamp_ms <= self.to_ms]
         # check if we are done fetching historical data
         last_ts_in_ns = int(data['result']['last'])
         # convert nanoseconds to milliseconds
