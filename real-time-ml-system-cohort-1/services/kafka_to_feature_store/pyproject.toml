@@ -11,6 +11,8 @@ hopsworks = "^3.7.0"
 loguru = "^0.7.2"
 python-dotenv = "^1.0.1"
 quixstreams = "^2.5.1"
+pydantic = "^2.7.4"
+pydantic-settings = "^2.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

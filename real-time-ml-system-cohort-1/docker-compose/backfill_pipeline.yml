@@ -1,6 +1,6 @@
 # redpanda.yml
 version: "3.7"
-name: feature_pipline
+name: backfill_pipline
 networks:
   redpanda_network:
     name: redpanda_network
@@ -15,7 +15,7 @@ services:
     environment:
       KAFKA_BROKER_ADDRESS: redpanda-0:9092
     env_file:
-    - ../services/trade-producer/live.env
+    - ../services/trade-producer/historical.env
   
   trade_to_ohlc:
     container_name: trade_to_ohlc
@@ -26,7 +26,7 @@ services:
     environment:
       KAFKA_BROKER_ADDRESS: redpanda-0:9092
     env_file:
-    - ../services/trade_to_ohlc/live.env
+    - ../services/trade_to_ohlc/historical.env
   
   kafka_to_feature_store:
     container_name: kafka_to_feature_store
@@ -37,4 +37,4 @@ services:
     environment:
       KAFKA_BROKER_ADDRESS: redpanda-0:9092
     env_file:
-    - ../services/kafka_to_feature_store/live.env
+    - ../services/kafka_to_feature_store/historical.env

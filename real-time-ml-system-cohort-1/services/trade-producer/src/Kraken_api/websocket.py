@@ -34,7 +34,7 @@ class krakenWebSocketTradeApi:
             _ = self._ws.recv()
         
 
-    def get_trades(self) -> List[Dict]:
+    def get_trades(self) -> List[Trade]:
         # mock_trades=[
         #     {
         #     'product-id':'BTC/USD',

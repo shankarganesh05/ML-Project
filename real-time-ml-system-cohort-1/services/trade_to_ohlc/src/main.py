@@ -1,8 +1,18 @@
-from typing import List,Dict
+from typing import Any,List,Dict,Tuple,Optional
 from datetime import timedelta
 from quixstreams import Application
-from src import config
+from src.config import config
 from loguru import logger
+
+def custom_ts_Extractor(
+        value: Any,
+        headers: Optional[List[Tuple[str, bytes]]],
+        timestamp: float,
+        timestamp_type #:TimestampType,
+)-> int:
+    return value["timestamp_ms"]
+
+
 def trade_to_ohlc(
         kafka_input_topic:str,
         kafka_output_topic:str,
@@ -22,7 +32,7 @@ def trade_to_ohlc(
         None
     """
     app = Application(broker_address=kafka_broker_address,consumer_group="trade_to_ohlc",auto_offset_reset="earliest")
-    input_topic = app.topic(name=kafka_input_topic,value_serializer='json')
+    input_topic = app.topic(name=kafka_input_topic,value_serializer='json',timestamp_extractor=custom_ts_Extractor,)
     output_topic = app.topic(name=kafka_output_topic,value_serializer='json')
 
     sdf = app.dataframe(input_topic)
@@ -85,7 +95,7 @@ def trade_to_ohlc(
 if __name__ == '__main__':
     try:
         trade_to_ohlc(
-            kafka_input_topic = config.kafka_input_topic_name,
+            kafka_input_topic =config.kafka_input_topic_name,
             kafka_output_topic=config.kafka_output_topic_name,
             kafka_broker_address=config.kafka_broker_address,
             ohlc_window_seconds=config.ohlc_window_seconds,)

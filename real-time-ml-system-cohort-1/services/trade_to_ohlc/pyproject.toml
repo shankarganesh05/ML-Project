@@ -11,6 +11,8 @@ quixstreams = "^2.5.1"
 python-dotenv = "^1.0.1"
 loguru = "^0.7.2"
 make = "^0.1.6.post2"
+pydantic = "^2.7.4"
+pydantic-settings = "^2.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

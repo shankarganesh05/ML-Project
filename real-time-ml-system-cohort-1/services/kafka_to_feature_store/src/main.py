@@ -1,6 +1,6 @@
 from loguru import logger
 from quixstreams import Application
-from src import config
+from src.config import config
 from datetime import datetime, timezone
 import json
 from src.hopsworks_api import push_to_featurestore
@@ -14,6 +14,7 @@ def kafka_to_feature(
     kafka_topic: str,
     kafka_broker_address: str,
     buffer_size:int,
+    save_every_n_sec:int,
     live_or_historical: str
 ) -> None:
     """
@@ -50,7 +51,7 @@ def kafka_to_feature(
             if msg is None:
                 n_sec = 10
                 logger.debug(f'No new messages in the input topic {kafka_topic}')
-                if (get_current_utc_sec - last_saved_to_feature_store_ts)>n_sec:
+                if (get_current_utc_sec() - last_saved_to_feature_store_ts)>save_every_n_sec:
                     logger.debug('Exceeded timer limit! We push the data to the feature store.')
                     push_to_featurestore(
                     feature_group_name=feature_group_name,
@@ -87,7 +88,7 @@ def kafka_to_feature(
 
 
 if __name__ == "__main__":
-
+    logger.debug(config.model_dump())
     try:
         kafka_to_feature(
             feature_group_name=config.feature_group_name,
@@ -95,7 +96,8 @@ if __name__ == "__main__":
             kafka_broker_address=config.kafka_broker_address,
             kafka_topic=config.kafka_topic,
             buffer_size = config.buffer_size,
-            live_or_historical = config.live_or_historical
+            save_every_n_sec=config.save_every_n_sec,
+            live_or_historical = config.live_or_historical,
         )
     except KeyboardInterrupt:
         logger.error("Existing Gracefully...")
