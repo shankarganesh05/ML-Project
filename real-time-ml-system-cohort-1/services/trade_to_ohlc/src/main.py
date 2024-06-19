@@ -17,6 +17,7 @@ def trade_to_ohlc(
         kafka_input_topic:str,
         kafka_output_topic:str,
         kafka_broker_address:str,
+        kafka_consumer_group:str,
         ohlc_window_seconds:int,
 ) -> None:
     """"Reads trades from Kafka input topic
@@ -31,7 +32,7 @@ def trade_to_ohlc(
     Returns:
         None
     """
-    app = Application(broker_address=kafka_broker_address,consumer_group="trade_to_ohlc",auto_offset_reset="earliest")
+    app = Application(broker_address=kafka_broker_address,consumer_group=kafka_consumer_group,auto_offset_reset="earliest")
     input_topic = app.topic(name=kafka_input_topic,value_serializer='json',timestamp_extractor=custom_ts_Extractor,)
     output_topic = app.topic(name=kafka_output_topic,value_serializer='json')
 
@@ -98,6 +99,7 @@ if __name__ == '__main__':
             kafka_input_topic =config.kafka_input_topic_name,
             kafka_output_topic=config.kafka_output_topic_name,
             kafka_broker_address=config.kafka_broker_address,
+            kafka_consumer_group=config.kafka_consumer_group,
             ohlc_window_seconds=config.ohlc_window_seconds,)
     except KeyboardInterrupt:
         logger.error("Existing Gracefully...")

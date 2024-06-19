@@ -6,6 +6,7 @@ from dotenv import find_dotenv, load_dotenv
 class Config(BaseSettings):
     kafka_broker_address:str
     kafka_topic:str
+    kafka_consumer_group:str
     feature_group_name:str
     feature_group_version:int
     buffer_size:int

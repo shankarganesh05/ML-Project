@@ -9,6 +9,7 @@ class Config(BaseSettings):
     kafka_broker_address: str
     kafka_input_topic_name: str
     kafka_output_topic_name: str
+    kafka_consumer_group:str
 
     # OHLC
     ohlc_window_seconds: int

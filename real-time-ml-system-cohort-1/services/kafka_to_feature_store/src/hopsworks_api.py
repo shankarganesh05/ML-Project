@@ -2,11 +2,11 @@ from typing import List,Dict
 import hopsworks
 import pandas as pd
 from typing import Dict
-from src import config
+from src.config import config
 
 
 def push_to_featurestore(
-    feature_group_name: str, feature_group_version: int, Data: List[Dict],online_or_offline: str,
+    feature_group_name: str, feature_group_version: int, Data: List[dict],online_or_offline: str,
 ) -> None:
     """
     Pushes the given `data` to the feature store, writing it to the feature group
