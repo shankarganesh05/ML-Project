@@ -10,6 +10,9 @@ python = ">=3.8,<3.9.7 || >3.9.7,<3.13"
 streamlit = "^1.35.0"
 pydantic-settings = "^2.3.3"
 pydantic = "^2.7.4"
+loguru = "^0.7.2"
+python-dotenv = "^1.0.1"
+bokeh = "2.4.3"
 
 
 [build-system]
