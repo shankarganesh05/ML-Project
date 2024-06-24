@@ -50,11 +50,12 @@ def get_feature_from_the_store(
         features : pd.DataFrame = feature_view.get_batch_data()
     
     else:
-        features: pd.DataFrame = feature_view.get_feature_vectors(
+        features = feature_view.get_feature_vectors(
             entry = get_primary_keys(last_n_minutes=20),
-            return_type ='pandas'
+            #return_type ='pandas',
         )
-
+    # breakpoint()
+    features = features.sort_values(by='timestamp')
     return features
 
 def get_primary_keys(last_n_minutes: int) -> List[dict]:
@@ -73,11 +74,14 @@ def get_primary_keys(last_n_minutes: int) -> List[dict]:
     primary_keys = [
         {
             'product_id': config.product_id,
-            'timestamp': timestamp,} for timestamp in timestamps]
+            'timestamp': timestamp,
+            } for timestamp in timestamps
+            ]
     return primary_keys
 
 if __name__ == "__main__":
-    data = get_feature_from_the_store(online_or_offline)
-    print(data.head())
+    data = get_feature_from_the_store(online_or_offline='online')
+    logger.debug(data.head())
+    
 
         

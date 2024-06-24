@@ -7,7 +7,7 @@ networks:
     driver: bridge
 services:
   trade-producer:
-    container_name: trade-producer
+    #container_name: trade-producer
     build:
       context: ../services/trade-producer
     networks:
@@ -18,7 +18,7 @@ services:
     - ../services/trade-producer/historical.env
   
   trade_to_ohlc:
-    container_name: trade_to_ohlc
+    #container_name: trade_to_ohlc
     build:
       context: ../services/trade_to_ohlc
     networks:
@@ -29,7 +29,7 @@ services:
     - ../services/trade_to_ohlc/historical.env
   
   kafka_to_feature_store:
-    container_name: kafka_to_feature_store
+    #container_name: kafka_to_feature_store
     build:
       context: ../services/kafka_to_feature_store
     networks:
