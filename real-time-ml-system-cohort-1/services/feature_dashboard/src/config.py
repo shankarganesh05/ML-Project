@@ -9,5 +9,6 @@ class Config(BaseSettings):
     feature_view_version:int
     hopsworks_project_name:str
     hopsworks_api_key:str
+    product_id:str
     
 config = Config()
