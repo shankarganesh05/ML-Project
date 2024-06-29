@@ -50,11 +50,12 @@ def get_feature_from_the_store(
         features : pd.DataFrame = feature_view.get_batch_data()
     
     else:
+        logger.debug("Getting Online Feature Vectors")
         features = feature_view.get_feature_vectors(
             entry = get_primary_keys(last_n_minutes=20),
-            #return_type ='pandas',
+            return_type ='pandas'
         )
-    # breakpoint()
+    #breakpoint()
     features = features.sort_values(by='timestamp')
     return features
 
@@ -67,7 +68,7 @@ def get_primary_keys(last_n_minutes: int) -> List[dict]:
     """
     logger.debug("Getting primary keys")
     current_utc = int(time.time() *1000)
-    current_utc= current_utc-(current_utc*60000)
+    current_utc= current_utc-(current_utc%60000)
     # generate a list of timestamps in miliseconds for the last 'last_n_minutes' minutes
     timestamps = [current_utc - (i * 60000) for i in range(last_n_minutes)]
     # create a list of dictionaries with the 'timestamp' key
@@ -75,8 +76,9 @@ def get_primary_keys(last_n_minutes: int) -> List[dict]:
         {
             'product_id': config.product_id,
             'timestamp': timestamp,
-            } for timestamp in timestamps
+        } for timestamp in timestamps
             ]
+    #breakpoint()
     return primary_keys
 
 if __name__ == "__main__":
