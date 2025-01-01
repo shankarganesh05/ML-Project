@@ -1,0 +1,60 @@
+# redpanda.yml
+version: "3.7"
+name: technical_indicator_pipeline
+networks:
+  redpanda_network:
+    name: redpanda_network
+    external: true
+services:
+  trades:
+    build:
+      context: ../services/trades
+      dockerfile: DockerFile
+    env_file:
+      - ../services/trades/.env
+    environment:
+      - KAFKA_BROKER_ADDRESS=redpanda-0:9092 
+    #container_name: trades
+    networks:
+      - redpanda_network
+    restart: always
+
+  candles:
+    build:
+      context: ../services/candles
+      dockerfile: DockerFile
+    env_file:
+      - ../services/candles/.env
+    environment:
+      - KAFKA_BROKER_ADDRESS=redpanda-0:9092 
+    #container_name: candles
+    networks:
+      - redpanda_network
+    restart: always
+
+  technical-indicators:
+    build:
+      context: ../services/technical-indicators
+      dockerfile: DockerFile
+    env_file:
+      - ../services/technical-indicators/.env
+    environment:
+      - KAFKA_BROKER_ADDRESS=redpanda-0:9092 
+    #container_name: technical-indicators
+    networks:
+      - redpanda_network
+    restart: always
+
+  to-feature-store:
+    build:
+      context: ../services/to-feature-store
+      dockerfile: DockerFile
+    env_file:
+      - ../services/to-feature-store/.env
+      - ../services/to-feature-store/credential.env
+    environment:
+      - KAFKA_BROKER_ADDRESS=redpanda-0:9092 
+    #container_name: to-feature-store
+    networks:
+      - redpanda_network
+    restart: always
